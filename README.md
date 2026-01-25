@@ -1,2 +1,68 @@
 # Aave-V3-Risk-Deep-Dive
-Advanced risk solvency analysis of Aave V3 using Jump-Diffusion stress testing and Oracle integrity auditing. Beyond basic Monte Carlo: Evaluating liquidation thresholds and buffer resilience under fat-tail market events.
+# 🛡️ DeFi Audit Portfolio: Aave V3 Resilience Analysis (BTC/USD Flash Crash)
+
+This portfolio presents a high-frequency forensic audit of the **Aave V3 Protocol** during the violent BTC/USD liquidity shock on **December 24, 2025 (17:19:18 UTC)**. 
+
+The project demonstrates a full-stack data engineering and risk modeling workflow: from raw blockchain indexing (SQL) to automated risk characterization (Python/Jupyter).
+
+---
+
+## 📉 Case Study: The 18-Second Window
+On Dec 24, 2025, BTC experienced a flash crash on decentralized exchanges, with spot prices diverging significantly from centralized feeds.
+
+* **Incident Time**: 2025-12-24 17:19:18 UTC
+* **Audit Focus**: **BTC/USD** (Market Reality vs. Protocol Oracle)
+* **Deviation Recorded**: **-12.76%** at the bottom of the crash.
+* **Protocol Outcome**: **Zero Liquidations** (due to Oracle Smoothing mechanisms).
+
+---
+
+## 🛠️ Repository Structure
+
+| Directory | Purpose | Key Contents |
+| :--- | :--- | :--- |
+| [**`/sql_scripts`**](./sql_scripts) | **Data Extraction** | High-frequency SQL queries (Flipside/Snowflake) to index block-level DEX swaps. |
+| [**`/data`**](./data) | **Evidence Storage** | Raw and aggregated CSV datasets capturing every trade and block metric during the crash. |
+| [**`/analysis`**](./analysis) | **Risk Characterization** | Jupyter Notebooks calculating Shadow Health Factors, LTV Trajectories, and Liquidation Waterfalls. |
+
+---
+
+## 🔬 Audit Methodology: 15s High-Frequency Sampling
+
+Traditional 1-hour or 1-day price feeds fail to capture DeFi risks. This audit utilizes **Block-Level Sampling (~12.5s resolution)** to "stress test" the protocol.
+
+
+
+### 1. The Shadow Health Factor ($HF_{Shadow}$)
+We benchmark the protocol's reported safety against market reality by calculating the **Shadow Health Factor**:
+
+$$HF_{Shadow} = \frac{\sum (Collateral_{i} \times Price_{Spot} \times LT_{i})}{Total Debt_{USD}}$$
+
+This metric reveals the "Hidden Risk" when Oracles lag behind aggressive market sell-offs.
+
+### 2. Basis Risk Quantization
+By comparing the **DEX Spot Price** ($P_{DEX}$) with the **Aave Oracle Price** ($P_{Oracle}$), we quantify the **Basis Risk**:
+$$Basis\ Risk\ \% = \frac{P_{DEX} - P_{Oracle}}{P_{Oracle}} \times 100\%$$
+
+
+
+---
+
+## 🚀 Key Forensic Insights
+
+1.  **Market Chaos**: Individual swap distributions (found in `/analysis`) prove that BTC hit a local low of **$85,858** while the Oracle remained static at **$98,420**.
+2.  **Oracle Shield**: The audit confirms that Aave’s 15-second smoothing filter successfully ignored the "outlier trades," preventing a potential **$125M erroneous liquidation cascade**.
+3.  **Liquidation Resilience**: Even at the absolute market bottom, major whale positions maintained a **Safety Margin of >7%** above their Liquidation Thresholds.
+
+---
+
+## 💻 Tech Stack
+* **SQL**: Blockchain Indexing (Flipside Crypto, Ethereum Mainnet)
+* **Python**: Data Forensic (Pandas, Numpy)
+* **Visualization**: Risk Modeling (Matplotlib, Seaborn)
+* **Documentation**: Financial Audit Standards (Markdown, LaTeX)
+
+---
+
+## 📧 Contact & Verification
+All data and transaction hashes (`Tx Hash`) provided in the [`/data`](./data) folder are verifiable on **Etherscan.io** using the corresponding Ethereum block numbers.
