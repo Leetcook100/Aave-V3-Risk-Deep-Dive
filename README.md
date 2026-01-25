@@ -68,8 +68,3 @@ $$Basis\ Risk\ \% = \frac{P_{DEX} - P_{Oracle}}{P_{Oracle}} \times 100\%$$
 
 ## 📧 Contact & Verification
 All data and transaction hashes (`Tx Hash`) provided in the [`/data`](./data) folder are verifiable on **Etherscan.io** using the corresponding Ethereum block numbers.
-
-## 🚀 Key Forensic Insights
-
-1.  **Divergence Analysis**: The deviation peaked at **-12.76%** in Block 24081542. This gap existed for exactly 3 blocks (~36 seconds) before mean reversion.
-2.  **Resilience Proof**: As shown in `Price Divergence___Health Factor Audit.ipynb`, the Oracle smoothing effectively filtered this "noise," preventing a potential cascade of liquidations for whales with high LTVs.
