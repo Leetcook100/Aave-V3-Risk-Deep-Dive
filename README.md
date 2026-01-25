@@ -10,10 +10,12 @@ The project demonstrates a full-stack data engineering and risk modeling workflo
 ## 📉 Case Study: The 18-Second Window
 On Dec 24, 2025, BTC experienced a flash crash on decentralized exchanges, with spot prices diverging significantly from centralized feeds.
 
-* **Incident Time**: 2025-12-24 17:19:18 UTC
-* **Audit Focus**: **BTC/USD** (Market Reality vs. Protocol Oracle)
-* **Deviation Recorded**: **-12.76%** at the bottom of the crash.
-* **Protocol Outcome**: **Zero Liquidations** (due to Oracle Smoothing mechanisms).
+* **Incident Timestamp**: 2025-12-24 17:19:18 UTC
+* **Key Block**: #24081542
+* **Market Spot Low**: **$85,858.59** (Captured in `Sheet4.csv`)
+* **Oracle Reference**: **$98,420.00** (Base price during incident)
+* **Max Basis Risk**: **-12.76%** (The "Shadow" deviation recorded in `Sheet6.csv`)
+* **Liquidation Outcome**: **Zero (0)**. The protocol’s safety filters successfully mitigated the shock.
 
 ---
 
@@ -66,3 +68,8 @@ $$Basis\ Risk\ \% = \frac{P_{DEX} - P_{Oracle}}{P_{Oracle}} \times 100\%$$
 
 ## 📧 Contact & Verification
 All data and transaction hashes (`Tx Hash`) provided in the [`/data`](./data) folder are verifiable on **Etherscan.io** using the corresponding Ethereum block numbers.
+
+## 🚀 Key Forensic Insights
+
+1.  **Divergence Analysis**: The deviation peaked at **-12.76%** in Block 24081542. This gap existed for exactly 3 blocks (~36 seconds) before mean reversion.
+2.  **Resilience Proof**: As shown in `Price Divergence___Health Factor Audit.ipynb`, the Oracle smoothing effectively filtered this "noise," preventing a potential cascade of liquidations for whales with high LTVs.
