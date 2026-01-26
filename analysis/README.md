@@ -63,7 +63,3 @@ All analysis is performed in **Jupyter (Python 3.10+)**.
 **Data Dependency:** Inputs are sourced from the [`/data`](../data) directory, which are outputs of the SQL extraction phase.
 
 ---
-> **Note on `Price Sweep (abandoned).ipynb`**: This notebook was archived. It initially attempted a broad-range scan but was superseded by the more precise `Liquidation Waterfall Simulation` for better forensic accuracy.
-
----
-*Verified by DeFi Forensic Audit Portfolio - Actuarial Science Division*
