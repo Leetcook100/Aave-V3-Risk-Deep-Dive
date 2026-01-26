@@ -1,67 +1,69 @@
-# 📊 Analysis Core: BTC/USD Flash Crash Forensic Engine
+# 📈 Analysis Layer: Actuarial Risk & Solvency Modeling
 
-This directory contains the computational heart of the audit project. We use a series of Jupyter Notebooks to transform raw blockchain data (from `/data`) into actionable risk insights, focusing on the **Aave V3 Protocol's resilience** during the December 2025 BTC liquidity shock.
+This directory contains the **Python-based analytical core** of the audit. By integrating the raw evidence from [`/sql_scripts`](../sql_scripts), we transition from data extraction to **Stochastic and Deterministic Risk Modeling**.
 
-
-
----
-
-## 🗂️ Notebook Directory & Audit Objectives
-
-### 1. Market Reality & Oracle Divergence
-* **`Price Divergence___Health Factor Audit.ipynb`**
-    * **Objective**: The "Primary Forensic Evidence." It compares Aave's Oracle price against Uniswap/Sushiswap spot prices.
-    * **Key Output**: Visualizes the **Basis Risk Gap** and simulates the "Shadow Health Factor" of a $50M whale position.
-* **`Market Stress Timeline___Price Deviation Audit.ipynb`**
-    * **Objective**: Characterizes micro-volatility at a 12-second (block-level) resolution.
-    * **Key Output**: Tracks **Intra-block Price Ranges** and identifies the "Smoking Gun" blocks where deviation exceeded -10%.
-
-### 2. Liquidity & Execution Characterization
-* **`Volume Profile___ Slippage Sensitivity.ipynb`**
-    * **Objective**: Investigates the depth of the order book during the crash.
-    * **Key Output**: **Volume Profile** (Price vs. Density) and recovery curve analysis. It proves whether the crash was driven by thin liquidity or systemic selling.
-
-
-### 3. Position-Level Risk Tracking
-* **`Whale LTV Tracker.ipynb`**
-    * **Objective**: Real-time monitoring of top collateralized positions.
-    * **Key Output**: 15-second interval **Loan-to-Value (LTV)** trajectory, identifying how close major borrowers came to the 83% Liquidation Threshold.
-
-### 4. Systemic Stress Testing
-* **`Liquidation Waterfall.ipynb`**
-    * **Objective**: A predictive "What-If" model for cascading failures.
-    * **Key Output**: The **Liquidation Cliff**—calculates the cumulative USD volume of debt that would be liquidated at various price drop increments.
-* **`Price Sweep (abandoned).ipynb`**
-    * **Objective**: (Experimental) Systematic sweep of price impacts across the USDT/WBTC market to detect cross-asset contagion.
+## 🎯 Analytical Objectives
+From an **Actuarial Science** perspective, the primary goal is to evaluate the **Surplus Process** of the Aave V3 protocol during the 18-second liquidity shock. We aim to determine the "Distance to Ruin" for top-tier whales and the systemic resilience of the WBTC/USDT market.
 
 ---
 
-## 🛠️ Technical Implementation Details
+## 📂 Notebook Index: The "Four-Pillar" Framework
 
-### Time-Format Normalization
-All notebooks include a custom pre-processing engine to resolve the **Excel Timestamp Truncation Bug**. 
-* **Correction Logic**: Truncated `MM:SS` strings are automatically reconstructed into ISO-8601 standard `YYYY-MM-DD HH:MM:SS` to ensure consistent chronological sorting across all time-series plots.
-
-### Risk Metrics Defined
-
-The core of our audit revolves around the **Health Factor ($HF$)** calculation:
-
-$$HF = \frac{\sum_{i} (Collateral_{i} \times Price_{i} \times LT_{i})}{Total Debt_{USD}}$$
-
-1.  **Basis Risk**: The % difference between the DEX Spot Price and the Aave Oracle Price.
-2.  **Shadow HF**: The $HF$ calculated using the market's worst execution price instead of the smoothed Oracle price.
-3.  **Safety Margin**: The distance between the current LTV and the Liquidation Threshold ($LT$).
+### Pillar 1: Market Microstructure & Basis Risk
+These notebooks quantify the "Execution Friction" and the gap between on-chain reality and global benchmarks.
+* **`Market Reality & Basis Risk.ipynb`**: Benchmarks DEX spot prices against global CEX data to quantify the **Basis Risk**.
+* **`Market Stress Timeline___Price Deviation Audit.ipynb`**: Visualizes the high-frequency volatility spikes within the crash window.
+* **`Volume Profile___ Slippage Sensitivity.ipynb`**: Analyzes the order book depth and how slippage scales with trade size during a crash.
 
 
-[Image of a financial risk assessment matrix]
 
+### Pillar 2: Systemic Concentration (Pareto Audit)
+Evaluating the "Too Big to Fail" risk within the Aave ecosystem.
+* **`Systemic Concentration.ipynb`**: Uses the **Pareto Principle (80/20 Rule)** to assess debt concentration among the Top 10 borrowers and its impact on protocol solvency.
+
+### Pillar 3: Whale Solvency & Trajectory
+Real-time tracking of individual high-net-worth positions.
+* **`Whale LTV Tracker.ipynb` / `Price Divergence___Health Factor Audit.ipynb`**: Tracks the **Health Factor (HF)** trajectory of specific whales using "Shadow Prices" rather than lagging Oracle prices.
+* **`Liquidation Waterfall.ipynb`**: Identifies the specific price points where individual "whale" positions trigger a cascade.
+
+
+
+### Pillar 4: Protocol Resilience Simulations
+Advanced stress testing to identify the "Insolvency Cliff."
+* **`Liquidation Waterfall Simulation.ipynb`**: A **Deterministic Stress Test** that simulates "What-if" scenarios (e.g., *What if BTC dropped 25% instead of 12%?*).
+* **`The Silent Oracle Proof.ipynb`**: Quantitative evidence proving that the Oracle's filtering logic successfully prevented **Recursive Ruin**.
 
 ---
 
-## 🚀 How to Reproduce the Analysis
-1.  Ensure all `.csv` files are present in the project root or the specified data path.
-2.  Install requirements: 
-    ```bash
-    pip install pandas matplotlib seaborn numpy
-    ```
-3.  Run the notebooks in sequence to generate the Audit Report visualizations.
+## 🧮 Actuarial Methodology
+
+### 1. The Surplus Process Model
+We treat Aave's safety buffer as an actuarial surplus:
+$$U(t) = u + ct - S(t)$$
+* **$u$**: Initial Collateral Over-collateralization.
+* **$S(t)$**: Stochastic Price Shock (The Dec 24 Crash).
+Our analysis proves that $U(t) > 0$ throughout the event, meaning no "Ruin" (Insolvency) occurred.
+
+
+
+### 2. Shadow Health Factor Analysis
+Traditional DeFi tools show HF based on **Oracle Prices**. Our notebooks calculate the **Shadow HF** based on **DEX Spot Prices**, revealing the hidden risk exposure during the 18-second window of extreme basis deviation.
+
+---
+
+## 🛠️ Execution & Requirements
+All analysis is performed in **Jupyter (Python 3.10+)**.
+
+**Key Libraries:**
+* `Pandas`: High-frequency data manipulation.
+* `Matplotlib / Seaborn`: Forensic data visualization.
+* `NumPy`: Linear algebra for multi-asset collateral weighting.
+* `SciPy`: Solvency distribution modeling.
+
+**Data Dependency:** Inputs are sourced from the [`/data`](../data) directory, which are outputs of the SQL extraction phase.
+
+---
+> **Note on `Price Sweep (abandoned).ipynb`**: This notebook was archived. It initially attempted a broad-range scan but was superseded by the more precise `Liquidation Waterfall Simulation` for better forensic accuracy.
+
+---
+*Verified by DeFi Forensic Audit Portfolio - Actuarial Science Division*
