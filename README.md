@@ -1,9 +1,18 @@
 # Aave-V3-Risk-Deep-Dive
 # 🛡️ DeFi Audit Portfolio: Aave V3 Resilience Analysis (BTC/USD Flash Crash)
 
+On 24th Dec, 2025, a localized flash crash on Binance saw BTC/USD1 drop to **$24,111 (-72.15%)** in seconds.
+
 This portfolio presents a high-frequency forensic audit of the **Aave V3 Protocol** during the violent BTC/USD liquidity shock on **December 24, 2025 (17:19:18 UTC)**. 
 
 The project demonstrates a full-stack data engineering and risk modeling workflow: from raw blockchain indexing (SQL) to automated risk characterization (Python/Jupyter).
+
+---
+
+### 🎯 Research Motivation & Background
+As a student specialized in **Actuarial Science** with a **minor in Finance**, I am driven to apply rigorous quantitative frameworks to evaluate systemic risks in the decentralized finance (DeFi) ecosystem.
+
+This project serves as my inaugural deep-dive into **Crypto-native Risk Management**. By integrating **Actuarial Ruin Theory** ~~(Monte Carlo Solvency simulations)~~ with **Financial Market Microstructure** (L2 Liquidity & Slippage analysis), I aim to quantify the robustness of Aave V3 during extreme volatility events like the Dec 24 flash crash.
 
 ---
 
