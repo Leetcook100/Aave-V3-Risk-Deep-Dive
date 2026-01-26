@@ -63,4 +63,3 @@ Proving why the protocol remained safe during the 18-second volatility.
 4.  **Export**: Save results as `.csv` and move to the [`/data`](../data) directory for Python processing.
 
 ---
-*Verified by DeFi Forensic Audit Portfolio - 2026*
