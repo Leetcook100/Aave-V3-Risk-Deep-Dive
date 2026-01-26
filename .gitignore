@@ -1,0 +1,28 @@
+# --- Python Bytecode & Cache ---
+__pycache__/
+*.py[cod]
+*$py.class
+
+# --- Virtual Environments ---
+venv/
+env/
+.venv/
+ENV/
+
+# --- Data Files & Large Datasets ---
+# We exclude large CSV/JSON files to maintain repo performance.
+# Users should run scripts to fetch fresh data via API.
+*.csv
+*.json
+*.log
+!example_data.csv
+
+# --- IDE & Editor Settings ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- Operating System Files ---
+.DS_Store
+Thumbs.db
