@@ -1,29 +1,46 @@
-# 🛠️ SQL Extraction Layer: On-Chain Data Indexing
+# 🛠️ SQL Extraction Layer: On-Chain Forensic Indexing
 
-This folder contains the **Source Queries** used to extract high-frequency trading data from the Ethereum blockchain. These scripts are designed to be executed on **Flipside Crypto** (or similar Snowflake-based data warehouses) to interface with the `ethereum.defi.ez_dex_swaps` tables.
+This directory contains the **Source Queries** used to extract high-frequency trading data and protocol state evidence from the Ethereum blockchain. These scripts are designed for **Flipside Crypto** or **Dune Analytics** (Snowflake-based) to audit the BTC/USD flash crash on **December 24, 2025**.
 
-## 🎯 Extraction Objectives
-The goal of these scripts is to move beyond "daily averages" and capture the **Block-Level Market Reality**. This is essential for auditing 18-second flash crashes where traditional price feeds often fail.
+## 🎯 Extraction Objective
+Standard price feeds (Oracle) often smooth out data to prevent market manipulation. These scripts bypass those filters to capture **Block-Level Reality** (~12.5s resolution), providing the "Ground Truth" evidence required to assess Aave V3's resilience during extreme liquidity shocks.
+
+
 
 ---
 
-## 📜 Script Inventory
+## 📜 Audit Workflow & Script Inventory
 
-### 1. `01_raw_dex_trades.sql` (Micro-Event Capture)
-* **Objective**: To isolate a focused 150-block window around the incident (Block 24081538).
-* **Audit Logic**: It calculates the **Price Range** ($Max - Min$) and **Standard Deviation** within each 12-second block. 
-* **Key Output**: Provides the raw data for `Sheet2.csv` and `Sheet4.csv`, allowing us to see individual trade execution prices versus the block average.
+### Phase 1: Incident Anchoring
+Before analyzing trades, we must translate "human time" into "blockchain time."
+* **`00_incident_block_discovery.sql`**
+    * **Logic**: Maps the timestamp `17:19:18` to the logical block height.
+    * **Anchor**: **Block #24081538**.
 
-### 2. `02_block_aggregation.sql` (Macro Volatility Baseline)
-* **Objective**: To scan a 30-minute window to establish a "Normal Market" baseline.
-* **Audit Logic**: Uses a `CASE` statement to normalize prices across different DEX platforms (Uniswap V2/V3, Sushiswap).
-* **Key Output**: Tags blocks with `HIGH_VOLATILITY` or `NORMAL` flags based on intra-block price swings, helping auditors identify if the crash was an isolated anomaly or part of a larger trend.
+### Phase 2: Market Pricing & Basis Risk
+Capturing the "Ground Truth" of prices across Uniswap V3 and Sushiswap.
+* **`01_incident_snapshot.sql`**: Granular log of every individual WBTC swap.
+* **`02_high_frequency_metrics.sql`**: Aggregates trades into 15s block intervals.
+* **`03_basis_risk_quantification.sql`**: Measures the gap between DEX spot and Oracle baseline.
+    * **Audit Metric**: $$Basis\ Risk\ \% = \frac{Price_{Spot} - Price_{Oracle}}{Price_{Oracle}} \times 100\%$$
 
-### 3. `03_deviation_audit.sql` (Oracle vs. Spot Benchmarking)
-* **Objective**: To extract the specific metrics required for **Basis Risk** assessment.
-* **Audit Logic**: Focuses on the price calculation from swap amounts:
-    $$Price_{Spot} = \frac{Amount_{USD}}{Amount_{Tokens}}$$
-* **Key Output**: Generates the high-resolution price feed used to benchmark the Aave Oracle's "lag" or "smoothing" effect.
+### Phase 3: Debtor & Risk Profiling (Whale Watching)
+Identifying who was at risk and what they were holding.
+* **`04_initial_debtor_discovery.sql`**: Scans 24h of activity to find the Top 100 USDT borrowers.
+* **`05_final_whale_solvency_analysis.sql`**: Maps collateral (WBTC/WETH) and injects precise numerical risk parameters (e.g., **0.825 LT** for WETH) for Python stress testing.
+
+### Phase 4: Systemic Impact Assessment
+Analyzing if individual failures could trigger a protocol-wide crisis.
+* **`07_systemic_concentration_audit.sql`**: **Pareto Analysis** comparing Top 10 debtor volume vs. total market debt.
+* **`08_aggregate_collateral_composition.sql`**: Audits the total collateral structure backing the USDT market.
+
+### Phase 5: Oracle Integrity Verification
+Proving why the protocol remained safe during the 18-second volatility.
+* **`09_oracle_market_benchmarking.sql`**: Benchmarks DEX prices against global aggregated market prices.
+* **`10_chainlink_oracle_staleness_audit.sql`**: Identifies the last valid Oracle update before the crash.
+* **`11_oracle_event_density_audit.sql`**: Proves **"Oracle Silence"**—the lack of price updates during the 18s crash window, preventing erroneous liquidations.
+
+
 
 ---
 
@@ -31,16 +48,19 @@ The goal of these scripts is to move beyond "daily averages" and capture the **B
 
 | Requirement | SQL Implementation | Resolution |
 | :--- | :--- | :--- |
-| **15s Sampling Frequency** | `GROUP BY BLOCK_NUMBER` | ~12.5 seconds (Block level) |
-| **Multi-DEX Aggregation** | `PLATFORM IN ('uniswap-v2', 'uniswap-v3', 'sushiswap')` | Aggregated Spot Price |
-| **Characterize Volatility** | `STDDEV(PRICE)` & `MAX(PRICE) - MIN(PRICE)` | Intra-block delta |
+| **15s Sampling** | `GROUP BY BLOCK_NUMBER` | ~12.5 seconds (Block level) |
+| **Multi-DEX Aggregation** | `PLATFORM IN ('uniswap-v3', 'sushiswap')` | Aggregated Spot Price |
+| **Risk Parameters** | `CASE WHEN reserve = 'WBTC' THEN 0.75` | Numerical LT for Python |
+| **Oracle Verification** | `chainlink.price_feeds` | Update Density Analysis |
 
 ---
 
 ## 🛠️ Execution Instructions
-1.  Open [Flipside Crypto App](https://next.flipsidecrypto.xyz/).
-2.  Copy the contents of the `.sql` files into the query editor.
-3.  Ensure the `BLOCK_NUMBER` parameters match the specific BTC/USD incident window.
-4.  Export the resulting dataset as a `.csv` and place it in the `/data` directory.
 
-> **Note on Asset Mapping**: While the source scripts use `WETH` for initial logic testing, the final audit data (found in `/data`) was extracted using the same logic applied to the **WBTC** (Wrapped Bitcoin) contract to align with the **BTC/USD** project scope.
+1.  **Environment**: Execute on [Flipside Crypto](https://next.flipsidecrypto.xyz/).
+2.  **Order**: Always run `00_incident_block_discovery.sql` first to confirm the `BLOCK_NUMBER` for your specific timeframe.
+3.  **Asset Mapping**: Ensure `reserve` addresses match the specific **WBTC** and **USDT** contracts used in the audit.
+4.  **Export**: Save results as `.csv` and move to the [`/data`](../data) directory for Python processing.
+
+---
+*Verified by DeFi Forensic Audit Portfolio - 2026*
