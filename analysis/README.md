@@ -9,7 +9,7 @@ Unlike standard financial audits that rely on daily or hourly price feeds, this 
 ### 1. Oracle Integrity & Market Microstructure
 These notebooks investigate the "silent proof": why the protocol remained stable despite a -12.76% price divergence in on-chain liquidity.
 
-* **[The Silent Oracle Proof.ipynb](/The_Silent_Oracle_Proof.ipynb)**: Forensic evidence of Aave’s Oracle heartbeat and deviation logic filtering out 18 seconds of extreme market noise.
+* **[The Silent Oracle Proof.ipynb](./The_Silent_Oracle_Proof.ipynb)**: Forensic evidence of Aave’s Oracle heartbeat and deviation logic filtering out 18 seconds of extreme market noise.
 * **[Market Reality & Basis Risk.ipynb](./Market_Reality_Basis_Risk.ipynb)**: Quantifies the "Shadow Gap" between global benchmarks and localized DEX execution prices.
 * **[Market Stress Timeline](./Market_Stress_Timeline___Price_Deviation_Audit.ipynb)**: Maps intra-block volatility intensity and deviation percentages across the incident window.
 
