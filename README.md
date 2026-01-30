@@ -1,9 +1,6 @@
 # 🛡️ Aave V3 Resilience Analysis: BTC/USD Flash Crash Forensic Audit
 **A High-Frequency Study of DeFi Systemic Risk & Oracle Robustness**
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tech: SQL](https://img.shields.io/badge/Tech-SQL-blue)](./sql_scripts)
-[![Tech: Python](https://img.shields.io/badge/Tech-Python-green)](./analysis)
 
 ## 📌 Executive Summary
 On **December 24, 2025 (17:19:18 UTC)**, a localized liquidity shock caused BTC/USD spot prices on decentralized exchanges to plummet to **$85,858.59**, while centralized benchmarks remained near **$98,420.00**. This created a critical **-12.76% Basis Risk** window.
