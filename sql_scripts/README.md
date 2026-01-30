@@ -1,65 +1,59 @@
-# 🛠️ SQL Extraction Layer: On-Chain Forensic Indexing
+# 🛠️ SQL Scripts: High-Frequency DeFi Forensic Pipeline
 
-This directory contains the **Source Queries** used to extract high-frequency trading data and protocol state evidence from the Ethereum blockchain. These scripts are designed for **Flipside Crypto** or **Dune Analytics** (Snowflake-based) to audit the BTC/USD flash crash on **December 24, 2025**.
+This directory contains the primary forensic SQL engine used to extract, normalize, and model data from the Ethereum Mainnet. These scripts serve as the verifiable evidence for the **Aave V3 Resilience Audit**, moving chronologically from incident discovery to systemic solvency stress testing.
 
-## 🎯 Extraction Objective
-Standard price feeds (Oracle) often smooth out data to prevent market manipulation. These scripts bypass those filters to capture **Block-Level Reality** (~12.5s resolution), providing the "Ground Truth" evidence required to assess Aave V3's resilience during extreme liquidity shocks.
+## 🏛️ Forensic Workflow Architecture
 
+The scripts are grouped into five logical phases of a DeFi risk audit.
 
+### Phase 0: Incident Discovery & Scoping
+Establishing the "Ground Zero" of the liquidity shock.
+* **[00_incident_block_discovery.sql](./00_incident_block_discovery.sql)**: Maps the exact UTC timestamp of the flash crash to Ethereum **Block #24081538**.
+* **[04_initial_debtor_discovery.sql](./04_initial_debtor_discovery.sql)**: Scans the protocol state leading up to the crash to identify all active USDT borrowers.
 
----
-
-## 📜 Audit Workflow & Script Inventory
-
-### Phase 1: Incident Anchoring
-Before analyzing trades, we must translate "human time" into "blockchain time."
-* **`00_incident_block_discovery.sql`**
-    * **Logic**: Maps the timestamp `17:19:18` to the logical block height.
-    * **Anchor**: **Block #24081538**.
-
-### Phase 2: Market Pricing & Basis Risk
-Capturing the "Ground Truth" of prices across Uniswap V3 and Sushiswap.
-* **`01_incident_snapshot.sql`**: Granular log of every individual WBTC swap.
-* **`02_high_frequency_metrics.sql`**: Aggregates trades into 15s block intervals.
-* **`03_basis_risk_quantification.sql`**: Measures the gap between DEX spot and Oracle baseline.
-    * **Audit Metric**: $$Basis\ Risk\ \% = \frac{Price_{Spot} - Price_{Oracle}}{Price_{Oracle}} \times 100\%$$
-
-### Phase 3: Debtor & Risk Profiling (Whale Watching)
-Identifying who was at risk and what they were holding.
-* **`04_initial_debtor_discovery.sql`**: Scans 24h of activity to find the Top 100 USDT borrowers.
-* **`05_final_whale_solvency_analysis.sql`**: Maps collateral (WBTC/WETH) and injects precise numerical risk parameters (e.g., **0.825 LT** for WETH) for Python stress testing.
-
-### Phase 4: Systemic Impact Assessment
-Analyzing if individual failures could trigger a protocol-wide crisis.
-* **`07_systemic_concentration_audit.sql`**: **Pareto Analysis** comparing Top 10 debtor volume vs. total market debt.
-* **`08_aggregate_collateral_composition.sql`**: Audits the total collateral structure backing the USDT market.
-
-### Phase 5: Oracle Integrity Verification
-Proving why the protocol remained safe during the 18-second volatility.
-* **`09_oracle_market_benchmarking.sql`**: Benchmarks DEX prices against global aggregated market prices.
-* **`10_chainlink_oracle_staleness_audit.sql`**: Identifies the last valid Oracle update before the crash.
-* **`11_oracle_event_density_audit.sql`**: Proves **"Oracle Silence"**—the lack of price updates during the 18s crash window, preventing erroneous liquidations.
+### Phase 1: High-Frequency Market Microstructure
+Capturing the "Market Reality" at a 12.5-second resolution.
+* **[01_raw_dex_trades.sql](./01_raw_dex_trades.sql)**: Extracts transaction-level swap data for WBTC across Uniswap and SushiSwap to identify sub-block price action.
+* **[02_block_aggregation.sql](./02_block_aggregation.sql)**: Aggregates trades by block height to calculate `min_price` and `volatility_flags`.
+* **[03_deviation_audit.sql](./03_deviation_audit.sql)**: Quantifies the localized "Shadow Price" vs. the Protocol Oracle, identifying a **-12.76% Basis Risk**.
 
 
 
----
+### Phase 2: Debtor Profiling & Exposure Mapping
+Transforming raw addresses into human-readable risk personas.
+* **[05_whale_exposure_mapping.sql](./05_whale_exposure_mapping.sql)**: Profiles the Top 10 borrowers, mapping their nicknames to multi-asset collateral portfolios.
+* **[06_final_whale_solvency_parameters.sql](./06_final_whale_solvency_parameters.sql)**: Normalizes token decimals and applies Aave V3 Liquidation Thresholds (LT) for time-series modeling.
 
-## 🔍 Audit Requirement Traceability
+### Phase 3: Systemic Concentration & Asset Composition
+Measuring the protocol's structural dependencies.
+* **[07_systemic_concentration_audit.sql](./07_systemic_concentration_audit.sql)**: Conducts a Pareto analysis of the USDT debt pool.
+    * *Finding*: **63.95% of debt** is concentrated in the top 50 addresses.
+* **[08_aggregate_collateral_composition.sql](./08_aggregate_collateral_composition.sql)**: Breaks down the total USD value of collateral by category, identifying heavy reliance on **Liquid Staking Tokens (weETH)**.
 
-| Requirement | SQL Implementation | Resolution |
-| :--- | :--- | :--- |
-| **15s Sampling** | `GROUP BY BLOCK_NUMBER` | ~12.5 seconds (Block level) |
-| **Multi-DEX Aggregation** | `PLATFORM IN ('uniswap-v3', 'sushiswap')` | Aggregated Spot Price |
-| **Risk Parameters** | `CASE WHEN reserve = 'WBTC' THEN 0.75` | Numerical LT for Python |
-| **Oracle Verification** | `chainlink.price_feeds` | Update Density Analysis |
+
+
+### Phase 4: Oracle Integrity & Staleness Verification
+Proving the protocol's insulation from market noise.
+* **[09_oracle_market_benchmarking.sql](./09_oracle_market_benchmarking.sql)**: Retrieves 1-minute granularity benchmark prices to verify Oracle update logic.
+* **[10_chainlink_oracle_staleness_audit.sql](./10_chainlink_oracle_staleness_audit.sql)**: Audits for "Stale Feeds"—confirming the Oracle updated correctly during peak stress.
+* **[11_oracle_event_density_audit.sql](./11_oracle_event_density_audit.sql)**: Analyzes update frequency; proves the Oracle filtered 18s of noise by remaining within the 0.5% deviation heartbeat.
+
+### Phase 5: Actuarial Sensitivity (The Price Sweep)
+* **[12_whale_liquidation_triggers.sql](./12_whale_liquidation_triggers.sql)**: The final actuarial calculation. It computes the exact ETH/BTC prices that would trigger a systemic liquidation cascade for the Top 50 whales.
+    * *Feature*: Includes a **"Dust Filter"** to eliminate mathematical ghost prices from low-value collateral.
 
 ---
 
-## 🛠️ Execution Instructions
+## 🔧 Technical Standards
 
-1.  **Environment**: Execute on [Flipside Crypto](https://next.flipsidecrypto.xyz/).
-2.  **Order**: Always run `00_incident_block_discovery.sql` first to confirm the `BLOCK_NUMBER` for your specific timeframe.
-3.  **Asset Mapping**: Ensure `reserve` addresses match the specific **WBTC** and **USDT** contracts used in the audit.
-4.  **Export**: Save results as `.csv` and move to the [`/data`](../data) directory for Python processing.
+| Feature | Implementation Detail |
+| :--- | :--- |
+| **Indexing** | Primary key is `BLOCK_NUMBER` for ~12.5s forensic resolution. |
+| **Precision** | Decimals handled via `POWER(10, reserve_decimals)` (e.g., WBTC=8, USDT=6). |
+| **Netting** | Solvency is calculated using `SUM(Borrow - Repay - Liquidation)` for true exposure. |
+| **Benchmarks** | WBTC Oracle: $86,908 | ETH Benchmark: $3,000 | BTC Benchmark: $90,000. |
 
 ---
+
+## 📋 Data Usage
+The outputs of these scripts (stored as `.csv` files in `/data/`) are consumed by the Jupyter Notebooks in `/analysis/` to generate LTV trajectories and liquidation waterfalls.
