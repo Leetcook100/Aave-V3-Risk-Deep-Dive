@@ -1,8 +1,8 @@
-# 🛡️ Aave V3 Resilience Analysis: BTC/USD Flash Crash Forensic Audit
+# 🛡️ Aave V3 Resilience Analysis: BTC/USD1 Flash Crash Forensic Audit
 **A High-Frequency Study of DeFi Systemic Risk, LTV Dynamics & Oracle Robustness**
 
 ## 📌 Executive Summary
-On **December 24, 2025 (17:19:18 UTC)**, a localized liquidity shock on decentralized exchanges (DEXs) saw BTC/USD prices plummet to a "Shadow Low" of **$85,858.59**, while the global market benchmark stayed at **$86,896.00**. 
+On **December 24, 2025 (17:19:18 UTC)**, a localized liquidity shock on decentralized exchanges (DEXs) saw BTC/USD1 prices plummet to a "Shadow Low" of **$24,111**, while the BTC/USDT global market benchmark stayed at **$86,896**. 
 
 This portfolio presents a block-level forensic audit of the **Aave V3 Protocol** during this 18-second volatility window. By applying **Actuarial Solvency Frameworks** and **High-Frequency Data Engineering**, this study characterizes the protocol's robustness. The audit concludes that Aave’s 15-second Oracle heartbeat and LTV-based liquidation filters effectively insulated the protocol, resulting in **zero (0) erroneous liquidations** despite extreme market noise.
 
