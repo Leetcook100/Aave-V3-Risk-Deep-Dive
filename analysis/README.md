@@ -60,4 +60,4 @@ Modeling "what-if" scenarios to identify structural vulnerabilities and the "Liq
 ---
 
 ### 🏛️ Actuarial Conclusion
-The audit confirms that Aave V3’s **Oracle Smoothing Mechanism** successfully acted as a circuit breaker. While localized DEX prices crashed to **$85,858**, the protocol Oracle maintained a floor of **$98,420**, effectively ignoring 18 seconds of extreme volatility and preventing an erroneous **$125M** liquidation cascade.
+The audit confirms that Aave V3’s **Oracle Smoothing Mechanism** successfully acted as a circuit breaker. While localized DEX prices crashed to **$85,858**, the protocol Oracle maintained a floor of **$86,908**, effectively ignoring 18 seconds of extreme volatility and preventing an erroneous **$125M** liquidation cascade.
