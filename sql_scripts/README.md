@@ -36,7 +36,7 @@ Measuring the protocol's structural dependencies.
 Proving the protocol's insulation from market noise.
 * **[09_oracle_market_benchmarking.sql](./09_oracle_market_benchmarking.sql)**: Retrieves 1-minute granularity benchmark prices to verify Oracle update logic.
 * **[10_chainlink_oracle_staleness_audit.sql](./10_chainlink_oracle_staleness_audit.sql)**: Audits for "Stale Feeds"—confirming the Oracle updated correctly during peak stress.
-* **[11_oracle_event_density_audit.sql](./11_oracle_event_density_audit.sql)**: Analyzes update frequency; proves the Oracle filtered 18s of noise by remaining within the 0.5% deviation heartbeat.
+* **[11_oracle_event_density_audit.sql](./11_oracle_event_density_audit.sql)**: Analyzes update frequency; proves the Oracle filtered 1s of noise by remaining within the 0.5% deviation heartbeat.
 
 ### Phase 5: Actuarial Sensitivity (The Price Sweep)
 * **[12_whale_liquidation_triggers.sql](./12_whale_liquidation_triggers.sql)**: The final actuarial calculation. It computes the exact ETH/BTC prices that would trigger a systemic liquidation cascade for the Top 50 whales.
