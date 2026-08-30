@@ -9,7 +9,7 @@ Unlike standard financial audits that rely on daily or hourly price feeds, this 
 ### 1. Oracle Integrity & Price Deviation
 These notebooks investigate the "silent proof": why the protocol remained stable despite extreme market noise.
 
-* **[The_Silent_Oracle_Proof.ipynb](./The_Silent_Oracle_Proof.ipynb)**: Forensic evidence showing how Aave’s Oracle heartbeat and deviation logic filtered out 18 seconds of localized flash crash noise.
+* **[The_Silent_Oracle_Proof.ipynb](./The_Silent_Oracle_Proof.ipynb)**: Forensic evidence showing how Aave’s Oracle heartbeat and deviation logic filtered out 1 second of localized flash crash noise.
 * **[Market_Reality_&_Basis_Risk.ipynb](./Market_Reality_&_Basis_Risk.ipynb)**: Quantifies the gap between global benchmarks and local DEX execution prices.
 * **[Market_Stress_Timeline_Audit.ipynb](./Market_Stress_Timeline___Price_Deviation_Audit.ipynb)**: A block-by-block audit of price deviation intensity.
 
@@ -60,4 +60,4 @@ Modeling "what-if" scenarios to identify structural vulnerabilities and the "Liq
 ---
 
 ### 🏛️ Actuarial Conclusion
-The audit confirms that Aave V3’s **Oracle Smoothing Mechanism** successfully acted as a circuit breaker. While localized DEX prices crashed to **$85,858**, the protocol Oracle maintained a floor of **$86,908**, effectively ignoring 18 seconds of extreme volatility and preventing an erroneous **$125M** liquidation cascade.
+The audit confirms that Aave V3’s **Oracle Smoothing Mechanism** successfully acted as a circuit breaker. While localized DEX prices crashed to **$85,858**, the protocol Oracle maintained a floor of **$86,908**, effectively ignoring 1 second of extreme volatility and preventing an erroneous **$125M** liquidation cascade.
